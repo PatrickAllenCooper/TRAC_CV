@@ -5,3 +5,5 @@ tqdm
 gym[box2d]
 swig
 procgen
+pandas
+matplotlib

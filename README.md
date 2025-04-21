@@ -62,3 +62,60 @@ python vision_exp/train.py --exp_name="procgen" --env_name="starpilot" --optimiz
   <img src="figures/games2.gif" alt="Game 2" width="30%">
   <img src="figures/games3.gif" alt="Game 3" width="30%">
 </p>
+
+
+## Convex Optimization Experiments
+
+This repository also includes a framework for comparing TRAC against standard optimizers (SGD, Adam, Adagrad, RMSprop) on simple convex optimization tasks (Linear and Logistic Regression using synthetic data). This allows for analyzing the convergence properties of TRAC in a controlled setting.
+
+### Setup
+
+First, ensure you have the necessary dependencies installed, including those for plotting:
+
+```bash
+pip install -r requirements.txt
+```
+
+### Running Experiments
+
+The main script for running these experiments is `convex_experiments/main_convex.py`. You can run it from the command line, specifying the task, optimizer, and other parameters.
+
+Example commands (run from the root directory):
+
+```bash
+# Run Linear Regression with Adam (learning rate 0.001, seed 1)
+python convex_experiments/main_convex.py --task linear --optimizer Adam --lr 0.001 --seed 1
+
+# Run Linear Regression with TRAC-Adam (seed 1)
+python convex_experiments/main_convex.py --task linear --optimizer TRAC_Adam --seed 1
+
+# Run Logistic Regression with SGD (learning rate 0.1, seed 2)
+python convex_experiments/main_convex.py --task logistic --optimizer SGD --lr 0.1 --seed 2
+
+# Run Logistic Regression with TRAC-SGD (seed 2)
+python convex_experiments/main_convex.py --task logistic --optimizer TRAC_SGD --seed 2 
+```
+
+Results (metrics per iteration) will be saved as CSV files in the `convex_experiments/logs/` directory.
+
+*Note: For a fair comparison, you may need to tune the learning rate (`--lr`) for the baseline optimizers (SGD, Adam, etc.) on each specific task.*
+
+### Plotting Results
+
+After running experiments for different optimizers and seeds, you can generate comparison plots using the `convex_experiments/analysis/plot_results.py` script.
+
+Example command (run from the root directory):
+
+```bash
+# Plot results for the linear task, comparing Adam and TRAC_Adam 
+# using seeds 1 and 2. Plot against iteration number.
+python convex_experiments/analysis/plot_results.py \
+    --task linear \
+    --optimizers Adam TRAC_Adam \
+    --seeds 1 2 \
+    --x_axis iteration \
+    --log_dir convex_experiments/logs \
+    --output_dir convex_experiments/analysis/plots
+```
+
+This will generate plots (e.g., Loss vs. Iteration, Gradient Norm vs. Iteration) comparing the specified optimizers, averaged over the provided seeds, and save them in the `convex_experiments/analysis/plots/` directory.
